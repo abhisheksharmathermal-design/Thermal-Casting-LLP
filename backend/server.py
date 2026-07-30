@@ -1753,10 +1753,13 @@ app.add_middleware(
 @app.on_event("startup")
 async def on_startup():
     try:
+        await client.admin.command("ping")
+        logger.info("MongoDB connection successful")
         await seed_data()
+        logger.info("Application startup completed")
     except Exception:
-        logger.exception("Seed failed")
-
+        logger.exception("Application startup failed")
+        raise
 @app.on_event("shutdown")
 async def on_shutdown():
     client.close()
