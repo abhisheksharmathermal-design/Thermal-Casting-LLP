@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.emergent.castingmasterdna.vx7dl8",
+      "bundleIdentifier": "com.thermalcasting.catalogue",
       "infoPlist": {
         "NSCameraUsageDescription": "Capture product photos for the catalogue.",
         "NSPhotoLibraryUsageDescription": "Choose images to upload to the catalogue."
@@ -22,7 +22,7 @@
         "backgroundColor": "#1E3A5F"
       },
       "edgeToEdgeEnabled": true,
-      "package": "com.emergent.castingmasterdna.vx7dl8",
+      "package": "com.thermalcasting.catalogue",
       "permissions": ["CAMERA", "READ_MEDIA_IMAGES", "READ_MEDIA_VIDEO"]
     },
     "web": {
