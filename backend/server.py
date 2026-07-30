@@ -29,7 +29,7 @@ JWT_SECRET = os.environ['JWT_SECRET']
 JWT_ALGORITHM = os.environ.get('JWT_ALGORITHM', 'HS256')
 JWT_EXPIRE_MINUTES = int(os.environ.get('JWT_EXPIRE_MINUTES', 1440))
 EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
-
+AI_ENABLED = os.environ.get("AI_ENABLED", "false").lower() == "true"
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
@@ -565,11 +565,27 @@ async def build_product_context() -> str:
 
 @api.post("/ai/chat")
 async def ai_chat(req: ChatRequest, user=Depends(optional_user)):
-    """Non-streaming chat endpoint — persists history."""
-    from emergentintegrations.llm.chat import LlmChat, UserMessage
+    """AI chat is disabled unless explicitly configured."""
+
+    if not AI_ENABLED:
+        raise HTTPException(
+            status_code=503,
+            detail="AI assistant is currently disabled",
+        )
 
     if not EMERGENT_LLM_KEY:
-        raise HTTPException(status_code=500, detail="AI key not configured")
+        raise HTTPException(
+            status_code=503,
+            detail="AI provider is not configured",
+        )
+
+    try:
+        from emergentintegrations.llm.chat import LlmChat, UserMessage
+    except ImportError:
+        raise HTTPException(
+            status_code=503,
+            detail="AI integration package is not installed",
+        )
 
     # persist user msg
     user_msg = {
