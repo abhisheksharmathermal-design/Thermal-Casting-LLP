@@ -38,7 +38,18 @@ security = HTTPBearer(auto_error=False)
 
 app = FastAPI(title="Thermal Casting LLP Enterprise API", version="1.0.0")
 api = APIRouter(prefix="/api")
+@app.get("/")
+async def root():
+    return {
+        "status": "ok",
+        "service": "Thermal Casting LLP API"
+    }
 
+@app.get("/health")
+async def health():
+    return {
+        "status": "healthy"
+    }
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger("thermal_casting")
 
