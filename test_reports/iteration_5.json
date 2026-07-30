@@ -1,0 +1,41 @@
+{
+  "summary": "Media Library upgrade + app-preview-crash-fix verification. Backend: 11/11 pytest cases passed against https://casting-master-dna.preview.emergentagent.com/api — login (admin role confirmed), GET /api/media baseline, POST /api/admin/upload with save_to_library=true (returns id/url starting with /api/files/, content_type image/png, non-null media_id), media list contains new item, PATCH /api/admin/media/{id} (title/category/featured/tags all persisted), POST /api/admin/media/{id}/replace (physical file cleanup verified — old file returns 404, new file 200, upload_id updated), DELETE /api/admin/media/{id} (removed from list + linked physical file returns 404), and regression on /api/products, /api/categories, /api/materials, /api/company (all 200). Frontend: Expo web preview loads at / with THERMAL CASTING LLP header — NO 6000ms timeout crash. Admin login via Portal tab works with the seeded admin. Admin hub shows MEDIA LIBRARY card. Media Library screen shows the media grid (12 seeded items), All/IMAGE/VIDEO/BROCHURE/CERTIFICATE/PDF chips all filter correctly (image chip -> 4 items), search input filters, PICK IMAGE / PICK VIDEO buttons render. Product edit (TC-00087), Company Profile HERO IMAGE and News COVER IMAGE now all show the new UploadField with THREE buttons: LIBRARY / GALLERY / CAMERA (testIDs p-image-*, company-hero-*, news-image-*). Clicking LIBRARY opens a bottom-sheet MediaPicker with mp-search input and a 3-col grid of tiles (mp-item-*); typing 'valve' filters to 1 tile; clicking a tile closes the modal (verified mp-search no longer present).",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": [
+      {"component": "expo-image", "issue": "Console warning: 'Image: style.resizeMode is deprecated. Please use props.resizeMode.' — from an expo-image usage somewhere in the tree. Non-blocking but should be cleaned up. Reference: check <Image ... style={{resizeMode:...}}/> in app files."},
+      {"component": "React Native Web", "issue": "Console warning: 'props.pointerEvents is deprecated. Use style.pointerEvents' repeated on multiple screens. Not user-visible, but worth migrating. Reference: search for pointerEvents=\"none|box-none\" prop usage across the RN codebase."}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_media_library.py",
+    "/app/test_reports/pytest/media_library.xml"
+  ],
+  "action_items": [
+    "OPTIONAL: replace `style={{resizeMode: ...}}` on <Image> with the `resizeMode` prop (or use `contentFit` on expo-image) to silence the deprecation warning.",
+    "OPTIONAL: replace `pointerEvents=\"none\"` prop on Views with `style={{ pointerEvents: 'none' }}` to silence the RN-Web deprecation warning.",
+    "OPTIONAL (not blocking): /admin/login is not a valid Expo Router route (returns Unmatched Route). Admin login is via the Portal tab which is correct per the current design — but if any docs/links still reference /admin/login, redirect them to /(tabs)/portal."
+  ],
+  "critical_code_review_comments": [
+    "server.py is now 1730 lines — recommend splitting into routers (auth, products, categories, media, rfq, uploads) in a future refactor. Not blocking.",
+    "In /admin/media/{id}/replace, when upload_id is the SAME as existing.upload_id the old file is intentionally NOT deleted (safe). If a client mistakenly passes upload_id=None but a new url, the previous physical file will be orphaned. Consider deleting the previous file whenever url changes and previous upload was local, regardless of the new upload_id shape.",
+    "Media upload endpoint POST /admin/upload does not sanitize/limit title length or category enum — title is used as filename fallback and stored verbatim in Mongo. Low risk but worth Pydantic-validating.",
+    "Media replace endpoint doesn't verify the referenced upload_id actually exists in db.uploads — if a caller passes a bogus id, media doc is updated pointing at a non-existent upload row."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_media_library.py (new)",
+    "/app/test_reports/iteration_5.json (new)"
+  ],
+  "success_rate": {"backend": "100% (11/11)", "frontend": "100% (all critical flows verified)"},
+  "seed_data_creation": "None persisted. Test created one media item (title 'Test upload from tester'), renamed it, replaced its file, and finally DELETEd it — verified via GET /api/media that both the doc and the physical file are gone at the end of the run. Baseline media count restored.",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend media tests live in /app/backend/tests/test_media_library.py and are idempotent (all created data self-cleans). To run: pytest /app/backend/tests/test_media_library.py -v. Frontend admin flow: login must go via /(tabs)/portal (NOT /admin/login — that route is unmatched). Admin card testIDs are 'admin-<TITLE>' e.g. 'admin-MEDIA LIBRARY'. UploadField renders three testIDs: <base>-library, <base>-gallery, <base>-camera. MediaPicker uses mp-search, mp-close, and mp-item-<mediaId> tiles.",
+  "rca_of_issue": "N/A — verification of a completed feature. All specified backend endpoints and UI states behave per the review request."
+}

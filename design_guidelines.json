@@ -1,0 +1,177 @@
+{
+  "app_name": "Thermal Casting LLP",
+  "personality": "5 Brutalist Mobile",
+  "personality_one_liner": "A stark, highly functional, engineering-focused interface that prioritizes technical clarity, rigid grids, and structured inquiry workflows over soft aesthetics.",
+  "color": {
+    "light": {
+      "surface": "#F4F5F6",
+      "onSurface": "#111827",
+      "surfaceSecondary": "#FFFFFF",
+      "onSurfaceSecondary": "#1F2937",
+      "surfaceTertiary": "#E5E7EB",
+      "onSurfaceTertiary": "#374151",
+      "surfaceInverse": "#111827",
+      "onSurfaceInverse": "#F3F4F6",
+      "brand": "#E65C00",
+      "brandPrimary": "#E65C00",
+      "onBrandPrimary": "#FFFFFF",
+      "brandSecondary": "#CC5200",
+      "onBrandSecondary": "#FFFFFF",
+      "brandTertiary": "#FFEDD5",
+      "onBrandTertiary": "#9A3412",
+      "success": "#059669",
+      "onSuccess": "#FFFFFF",
+      "warning": "#D97706",
+      "onWarning": "#FFFFFF",
+      "error": "#DC2626",
+      "onError": "#FFFFFF",
+      "info": "#4B5563",
+      "onInfo": "#FFFFFF",
+      "border": "#D1D5DB",
+      "borderStrong": "#9CA3AF",
+      "divider": "#D1D5DB"
+    },
+    "dark": {
+      "surface": "#111827",
+      "onSurface": "#F3F4F6",
+      "surfaceSecondary": "#1F2937",
+      "onSurfaceSecondary": "#E5E7EB",
+      "surfaceTertiary": "#374151",
+      "onSurfaceTertiary": "#D1D5DB",
+      "surfaceInverse": "#F4F5F6",
+      "onSurfaceInverse": "#111827",
+      "brand": "#FF7A26",
+      "brandPrimary": "#FF7A26",
+      "onBrandPrimary": "#111827",
+      "brandSecondary": "#FF9854",
+      "onBrandSecondary": "#111827",
+      "brandTertiary": "#7C2D12",
+      "onBrandTertiary": "#FFEDD5",
+      "success": "#34D399",
+      "onSuccess": "#064E3B",
+      "warning": "#FBBF24",
+      "onWarning": "#78350F",
+      "error": "#F87171",
+      "onError": "#450A0A",
+      "info": "#9CA3AF",
+      "onInfo": "#111827",
+      "border": "#374151",
+      "borderStrong": "#4B5563",
+      "divider": "#374151"
+    }
+  },
+  "typography": {
+    "displayFontFamily": "Archivo",
+    "textFontFamily": "IBM Plex Mono",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Use visible spacing systems and rigid grids. Edge-to-edge sections with thick structural dividers. Zero soft padding without purpose.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 0,
+    "md": 0,
+    "lg": 0,
+    "pill": 0
+  },
+  "shadow_tier": "0",
+  "navigation": "bottom_tabs",
+  "icon_set": "Phosphor",
+  "glassmorphism": {
+    "enabled": false,
+    "do's": [],
+    "dont's": [
+      "Do not use glass or blur anywhere. It clashes with the brutalist industrial aesthetic."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "none",
+      "android": "none",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "none",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Home",
+      "purpose": "Showcase corporate identity, media library, and manufacturing capabilities with industrial starkness.",
+      "states": {
+        "loading": "Centered industrial orange spinner",
+        "empty": "N/A",
+        "error": "Mono-spaced error block with 'RETRY CONNECTION' hard button"
+      },
+      "layout": "Rigid edge-to-edge layout. Start with a hero image (factory/smelting) with a dark gradient scrim and oversized Archivo headlines. Below, use a modular grid for 'Enterprise Media & Video Library' featuring edge-to-edge thumbnail cards with a sharp play icon. Section headers should be heavy, bordered, and use uppercase mono fonts."
+    },
+    {
+      "name": "Catalogue",
+      "purpose": "A structured B2B inventory for valves and castings, optimized for technical comparison and RFQ workflows.",
+      "states": {
+        "loading": "Skeleton grids (sharp rectangles)",
+        "empty": "Stark mono text: 'NO PRODUCTS FOUND MATCHING CRITERIA' + Reset Filter CTA",
+        "error": "Error block with retry"
+      },
+      "layout": "Category-led discovery with a sticky filter bar at the top (solid surface bg, 1pt bottom border). Product cards should be sharp rectangles (0 radius), displaying high-contrast imagery, SKU in mono, and a prominent 'Add to Inquiry' button. Detail pages use progressive disclosure via bottom sheets for specs, CAD files, and certificates."
+    },
+    {
+      "name": "Portal",
+      "purpose": "Customer login and dashboard to track submitted RFQs, download certs, and view history.",
+      "states": {
+        "loading": "Spinner",
+        "empty": "Icon: Phosphor FileText (sharp outline). 'NO ACTIVE RFQS'. Action: 'BROWSE CATALOGUE'",
+        "error": "Standard error block"
+      },
+      "layout": "Login uses single-column edge-to-edge inputs with `borderStrong` outlines on focus. The dashboard features a table-like view of RFQs using thick structural dividers (`surfaceTertiary`), mono text for Tracking IDs, and stark status tags (success/warning colors in sharp rectangles). High information density."
+    },
+    {
+      "name": "Assistant",
+      "purpose": "AI Knowledge Assistant for technical spec lookup and catalogue queries.",
+      "states": {
+        "loading": "Blinking mono cursor",
+        "empty": "Stark welcome screen with suggested mono technical queries.",
+        "error": "Error bubble"
+      },
+      "layout": "Chat interface with sharp rectangular message bubbles. Mono timestamps aligned right. Input field pinned to the bottom (above keyboard) with a rigid 1pt top border and solid background. The AI persona should feel like a technical command-line interface rather than a friendly avatar."
+    }
+  ],
+  "images": {
+    "hero_corporate": {
+      "url": "https://images.unsplash.com/photo-1566226196556-ef949ce5f1a3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NjA2MTJ8MHwxfHNlYXJjaHwxfHxpbmR1c3RyaWFsJTIwcGxhbnQlMjBmYWN0b3J5JTIwZXh0ZXJpb3IlMjBiMmJ8ZW58MHx8fHwxNzg0Nzk2MzEyfDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Gray concrete industrial plant exterior"
+    },
+    "hero_smelting": {
+      "url": "https://images.pexels.com/photos/6804260/pexels-photo-6804260.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940",
+      "alt": "Molten metal pouring from ladle in industrial foundry"
+    },
+    "product_valve_sample": {
+      "url": "https://images.unsplash.com/photo-1766325693346-6279a63b1fba?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHxpbmR1c3RyaWFsJTIwdmFsdmUlMjBwcmVjaXNpb24lMjBtZXRhbHxlbnwwfHx8fDE3ODQzMTIxODl8MA&ixlib=rb-4.1.0&q=85",
+      "alt": "Precision engineering steel valve"
+    }
+  },
+  "instructions_to_main_agent": [
+    "Strictly follow the Brutalist Mobile personality. Zero border-radius across the entire application (buttons, inputs, cards, sheets all must have 0 radius).",
+    "Do NOT use any blue, purple, or indigo hues. The palette is restricted to stark greys, blacks, paper whites, and a single Molten Orange brand color (#E65C00) to represent heavy industry/casting.",
+    "Rely heavily on the IBM Plex Mono font for all metadata, SKUs, RFQ tracking IDs, timestamps, and buttons. Archivo is reserved for large structural headers.",
+    "Implement layout using rigid grids, thick structural dividers (1pt borders), and edge-to-edge containers. Do not use soft shadows or glassmorphism anywhere.",
+    "For the RFQ/Inquiry flow, build it as a sticky primary CTA at the bottom of the catalogue detail pages, keeping it visible over scrolling technical specs.",
+    "When a company logo is required, fallback to rendering the initials 'TC' in a stark, brand-tinted square container using the mono font.",
+    "Ensure all images used as backgrounds (e.g., hero covers) have a strict gradient scrim (top-down transparent to surfaceInverse) so overlaid text remains completely legible."
+  ]
+}

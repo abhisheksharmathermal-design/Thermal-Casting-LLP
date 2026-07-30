@@ -1,0 +1,52 @@
+{
+  "summary": "Backend-only testing of Thermal Casting LLP Phase 2 Enterprise Admin CMS. Executed 39 new pytest cases in /app/backend/tests/test_phase2_cms.py plus regression of all 26 Phase 1 cases — 65/65 PASSED (100%). Coverage: 4-role auth (super_admin/admin/sales_executive/customer), Materials CRUD (16 seeded, cascade $pull from products.material_ids on delete), Categories CRUD (10+ seeded), Extended Products (all Phase 2 fields incl. pressure_class/temperature_rating/casting_process/SEO), duplicate/toggle (featured|enabled|archived + 400 on invalid), Company profile CMS, News (announcement filter), Enhanced RFQ (sales_executive can set priority/quotation_url/quotation_amount/assigned_to), Customers (list+rfq_count, search, role/password_hash immutable), Staff (super_admin-only; admin blocked with 403; password hashed on PATCH & new login works; cannot delete self), AI Docs (list excludes content field, chat still succeeds after upload), Inquiries (INQ-2026-NNNNN, sales can update, history appended), Audit Logs (sales blocked, entries recorded with actor_email/actor_role/action/entity), CSV import/export (skip missing name/category, sales can export). Every mutation verified with follow-up GET for persistence.",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {"endpoint": "POST /api/admin/products/full", "issue": "ref_no uses count_documents()+1 (same race condition as RFQ). Under concurrent inserts, generated TC-NNNNN codes can collide. Recommend an atomic counters collection."},
+      {"endpoint": "POST /api/inquiry", "issue": "Same count-based ref_no pattern for INQ-2026-NNNNN — race-vulnerable but no functional blocker."},
+      {"endpoint": "POST /api/admin/products/import-csv", "issue": "In-loop uses local base_count for ref_no assignment; safe within a single request but not atomic across concurrent imports."},
+      {"endpoint": "PATCH /api/admin/customers/{id}", "issue": "Silently pops disallowed fields (role, password_hash, id). Consider returning 400 or a warning header so misuse is visible to clients."},
+      {"endpoint": "PATCH /api/admin/inquiries/{id}", "issue": "history push uses payload.get('admin_note') — if the client sends 'admin_notes' (plural, matching the RFQ field name), the note is stored as 'updated'. Naming inconsistency vs RFQ 'admin_notes'."}
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/conftest.py",
+    "/app/backend/tests/test_thermal_casting_backend.py",
+    "/app/backend/tests/test_phase2_cms.py",
+    "/app/test_reports/pytest/pytest_results.xml",
+    "/app/test_reports/pytest/phase2_results.xml"
+  ],
+  "action_items": [
+    "Optional: replace count_documents()+1 ref_no generators (products, inquiries, RFQs, CSV import) with an atomic counters collection to avoid race collisions in production.",
+    "Optional: harmonize inquiry-history field name — use 'admin_notes' (matching RFQ) instead of 'admin_note' in PATCH /api/admin/inquiries/{id}.",
+    "Optional: server.py is now 1382 lines — well past the 700-line split threshold. Split into routers: auth, products, materials, categories, media, rfq, inquiries, ai, admin_cms, staff, audit, csv.",
+    "Optional: migrate deprecated @app.on_event startup/shutdown handlers to FastAPI lifespan context manager."
+  ],
+  "critical_code_review_comments": [
+    "RBAC dependencies (require_admin / require_admin_or_super / require_super_admin) are correctly enforced across all Phase 2 endpoints — verified positive+negative cases for sales_executive vs admin vs super_admin.",
+    "Customer PATCH correctly pops role/password_hash/id before $set — verified by attempting to escalate role via PATCH (rejected silently, role remained 'customer').",
+    "Staff PATCH hashes 'password' field via passlib bcrypt before storing as 'password_hash' — verified by logging in with the new password after update.",
+    "AI docs list excludes 'content' field via projection {content: 0} — verified.",
+    "Material DELETE correctly cascades $pull to products.material_ids — verified with a live product referencing the deleted material.",
+    "product toggle endpoint correctly whitelists field ∈ {enabled, featured, archived} and returns 400 otherwise — verified.",
+    "audit_log helper writes actor_id/actor_email/actor_role/action/entity/entity_id/meta/timestamp for every mutating action — verified against material.create entry.",
+    "server.py has grown to 1382 lines (from 726 in iteration 1). This is now 2x the recommended split threshold and should be modularized into routers.",
+    "All Mongo reads still correctly project out _id. Good."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_phase2_cms.py (created — 39 tests)"
+  ],
+  "success_rate": {"backend": "100% (65/65 — 26 Phase 1 + 39 Phase 2)", "frontend": "N/A - not tested"},
+  "seed_data_creation": "None persisted. All test-created rows (materials, products, staff, news, inquiries, ai_docs, categories) were deleted in-test. Company tagline was mutated but is expected to be user-editable via the CMS.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend base: https://casting-master-dna.preview.emergentagent.com/api. Four seeded accounts in /app/memory/test_credentials.md. Phase 2 endpoints under /api/admin/{materials,categories,products/full,products/{id}/duplicate,products/{id}/toggle?field=,company,news,customers,staff,rfq,inquiries,ai/docs,audit-logs,products/import-csv,products/export-csv}. RBAC layers: require_admin=super_admin+admin+sales_executive, require_admin_or_super=super_admin+admin, require_super_admin=super_admin only. Ref-no formats: RFQ-YYYY-NNNNN, INQ-YYYY-NNNNN, TC-NNNNN (products). Company tagline is now user-mutable via PATCH /api/admin/company — do not hard-assert its value in future tests.",
+  "rca_of_issue": "No blocking issues found. Only cosmetic/architectural improvements noted (file-size split, atomic counters, field-name harmonization)."
+}

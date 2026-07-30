@@ -1,0 +1,50 @@
+{
+  "expo": {
+    "name": "Thermal Casting LLP",
+    "slug": "thermal-casting-llp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "thermalcasting",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.emergent.castingmasterdna.vx7dl8",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Capture product photos for the catalogue.",
+        "NSPhotoLibraryUsageDescription": "Choose images to upload to the catalogue."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#1E3A5F"
+      },
+      "edgeToEdgeEnabled": true,
+      "package": "com.emergent.castingmasterdna.vx7dl8",
+      "permissions": ["CAMERA", "READ_MEDIA_IMAGES", "READ_MEDIA_VIDEO"]
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/images/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/images/splash-icon.png",
+          "imageWidth": 220,
+          "resizeMode": "contain",
+          "backgroundColor": "#1E3A5F"
+        }
+      ],
+      "expo-video"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

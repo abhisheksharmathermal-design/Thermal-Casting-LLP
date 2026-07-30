@@ -1,0 +1,584 @@
+{
+  "captured_at": "2026-07-25T07:41:28.219634Z",
+  "categories": [
+    {
+      "id": "efb18f8d-6f6c-4459-93d7-0e7af082e91c",
+      "name": "Valve Castings",
+      "parent_id": null,
+      "description": "",
+      "icon": null,
+      "image_url": null,
+      "display_order": 20,
+      "enabled": true,
+      "created_at": "2026-07-25T07:23:40.535000"
+    },
+    {
+      "id": "85b71b92-2e40-4685-975e-bbe5f2655b21",
+      "name": "Aluminium Smelting Parts ",
+      "parent_id": null,
+      "description": "",
+      "icon": null,
+      "image_url": null,
+      "display_order": 20,
+      "enabled": true,
+      "created_at": "2026-07-25T07:25:09.465000"
+    },
+    {
+      "id": "d43785b9-a37c-4ceb-940b-5c1aa3ca3368",
+      "name": "Pump Castings ",
+      "parent_id": null,
+      "description": "",
+      "icon": null,
+      "image_url": null,
+      "display_order": 20,
+      "enabled": true,
+      "created_at": "2026-07-25T07:26:04.045000"
+    },
+    {
+      "id": "39c8e6ff-6ab0-4079-ab29-3aadb2dc5acd",
+      "name": "Mining and Crushing Parts ",
+      "parent_id": null,
+      "description": "",
+      "icon": null,
+      "image_url": null,
+      "display_order": 20,
+      "enabled": true,
+      "created_at": "2026-07-25T07:26:22.748000"
+    },
+    {
+      "id": "12760a7f-3cee-4dbb-9f4c-b99eb7f3d85f",
+      "name": "Steel Mill Parts",
+      "parent_id": null,
+      "description": "",
+      "icon": null,
+      "image_url": null,
+      "display_order": 20,
+      "enabled": true,
+      "created_at": "2026-07-25T07:26:41.826000"
+    }
+  ],
+  "product_category_map": [
+    {
+      "id": "a1fcf953-362d-4b03-aa00-12f9c779fc60",
+      "ref_no": "TC-00001",
+      "name": "Gate Valve Body Casting",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "b7cf02bf-f83b-48d5-bb2f-7899ad651ca2",
+      "ref_no": "TC-00002",
+      "name": "Globe Valve Body",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "4372b430-6fb7-4dc5-91f6-1d5040a994fa",
+      "ref_no": "TC-00003",
+      "name": "Check Valve Body",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "d0a8e409-83a7-40a1-a6d1-c75c0a55898b",
+      "ref_no": "TC-00004",
+      "name": "Ball Valve Body 2-Piece",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "f0900420-3c8d-4f23-bb07-ac88dc760b6c",
+      "ref_no": "TC-00005",
+      "name": "Butterfly Valve Body",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "735622e9-5fea-4676-80e6-b08915b73c6b",
+      "ref_no": "TC-00006",
+      "name": "Complete Gate Valve 6\" 150#",
+      "category": "Complete Valves"
+    },
+    {
+      "id": "acd5677c-d5d4-4ed1-ae69-955e9f7b0cc6",
+      "ref_no": "TC-00007",
+      "name": "Complete Globe Valve 4\" 300#",
+      "category": "Complete Valves"
+    },
+    {
+      "id": "8e560c7e-1a66-4494-950a-7f45d783f25b",
+      "ref_no": "TC-00008",
+      "name": "Pump Casing (Volute)",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "3a64b7a6-458a-4939-b068-3e593af2c076",
+      "ref_no": "TC-00009",
+      "name": "Pump Impeller Casting",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "c00bdb04-7999-4e1c-9e4c-cb8fb6ae33d1",
+      "ref_no": "TC-00010",
+      "name": "Pump Suction Cover",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "10103d06-305e-482c-968b-44c8cb3472e5",
+      "ref_no": "TC-00011",
+      "name": "Cone Crusher Bowl Liner",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "4a857073-10ea-4559-bb51-b2135a101c4e",
+      "ref_no": "TC-00012",
+      "name": "Jaw Crusher Fixed Jaw",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "1247baf3-f1ba-424e-8bb9-1237e136d25a",
+      "ref_no": "TC-00013",
+      "name": "Jaw Crusher Swing Jaw",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "f3da2cdc-62da-49c2-98fe-a8cf258b16d9",
+      "ref_no": "TC-00014",
+      "name": "Blow Bar (Impact Crusher)",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "98c9743e-cd5c-4960-9cb3-024303ead75f",
+      "ref_no": "TC-00015",
+      "name": "Crusher Side Liner (HRCS)",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "8a17a311-1c12-41a3-975a-2d4f6ab0a45b",
+      "ref_no": "TC-00016",
+      "name": "Mn Steel Plate (Gr.7)",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "212bdf2b-748f-4cc2-8bb5-625d5cd8cbb0",
+      "ref_no": "TC-00017",
+      "name": "Sole Plate (G20Mn5)",
+      "category": "Mining & Crushing"
+    },
+    {
+      "id": "895a2471-77db-4ed3-9d12-ac19d6374166",
+      "ref_no": "TC-00018",
+      "name": "Sow Mould",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "295c3d3a-d1c6-41d4-9bac-7131453aa649",
+      "ref_no": "TC-00019",
+      "name": "Ingot Mould",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "4026bde9-77c8-4bcf-a707-1d05ba8ee0b4",
+      "ref_no": "TC-00020",
+      "name": "Dross Drain Pan",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "9ddb2075-bddf-478e-87fd-bf6bf8d667d4",
+      "ref_no": "TC-00021",
+      "name": "Pouring Spout",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "c19b97f2-f462-432d-b7dc-96b926941fcb",
+      "ref_no": "TC-00022",
+      "name": "Anode Yoke Bracket",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "ef982e4f-0913-49d0-8d0f-569eb10a3e78",
+      "ref_no": "TC-00023",
+      "name": "Furnace Door Casting",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "96bf3644-512b-42c0-b442-e56489bf4288",
+      "ref_no": "TC-00024",
+      "name": "Sow Hook",
+      "category": "Aluminium Smelting"
+    },
+    {
+      "id": "4594ba3d-e8ed-4895-82f9-181b54a07163",
+      "ref_no": "TC-00025",
+      "name": "920 DIA Roller Casting",
+      "category": "Steel Mill Rolls"
+    },
+    {
+      "id": "819c1069-8aa6-4b92-9da9-267ce5cbf22f",
+      "ref_no": "TC-00026",
+      "name": "Split Girth Gear",
+      "category": "Steel Mill Rolls"
+    },
+    {
+      "id": "6979be43-d3d5-4360-85f8-577683785e5c",
+      "ref_no": "TC-00027",
+      "name": "Tyre Ring Casting",
+      "category": "Steel Mill Rolls"
+    },
+    {
+      "id": "83c54e0f-cd7a-44ca-98c7-db6fd5b6d34f",
+      "ref_no": "TC-00028",
+      "name": "Manganese Roll Shell 800\u00d7800",
+      "category": "Steel Mill Rolls"
+    },
+    {
+      "id": "2a2c21e3-d59b-4538-b907-e9cf83d87d0e",
+      "ref_no": "TC-00029",
+      "name": "Bowl Mill \u2014 Worm Gear Hub HY-193",
+      "category": "Bowl Mill Components"
+    },
+    {
+      "id": "a16b08e3-c80b-4417-bfbf-e6f83c5a7787",
+      "ref_no": "TC-00030",
+      "name": "Bowl Mill \u2014 Bowl HY-192.M",
+      "category": "Bowl Mill Components"
+    },
+    {
+      "id": "2378ad89-f701-4813-b11b-6bde5efcaacc",
+      "ref_no": "TC-00031",
+      "name": "Bowl Mill \u2014 Lower Journal Housing",
+      "category": "Bowl Mill Components"
+    },
+    {
+      "id": "a58e0122-88ec-4fd3-be56-39e8c55418d1",
+      "ref_no": "TC-00032",
+      "name": "Bowl Mill \u2014 Bowl Hub HY-269",
+      "category": "Bowl Mill Components"
+    },
+    {
+      "id": "a607ecd7-a352-47c1-8143-abd966b1b73d",
+      "ref_no": "TC-00033",
+      "name": "Bowl Mill \u2014 Gear Housing HY-216.M",
+      "category": "Bowl Mill Components"
+    },
+    {
+      "id": "c8af778e-0f5e-4a81-ba4f-3f04ed7b8c90",
+      "ref_no": "TC-00034",
+      "name": "Sprocket Casting (WCB)",
+      "category": "General Engineering"
+    },
+    {
+      "id": "6fff0fa0-6f9f-453b-b5e5-2a02343ddd02",
+      "ref_no": "TC-00037",
+      "name": "Injection Moulding Machine \u2014 Stationary Platen",
+      "category": "Injection Moulding"
+    },
+    {
+      "id": "20d440a6-1569-4b89-8b8e-903a04d9c185",
+      "ref_no": "TC-00039",
+      "name": "Brass Temple Bell",
+      "category": "Special Casting"
+    },
+    {
+      "id": "e1275ed7-2673-45e2-8b7b-f52b6b31360b",
+      "ref_no": "TC-00040",
+      "name": "Copper Block",
+      "category": "Special Casting"
+    },
+    {
+      "id": "9610599a-42e5-48bf-b26b-940058744213",
+      "ref_no": "TC-00041",
+      "name": "TEST_CSV_A_838104",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "2a3bb5bb-af72-4604-acfd-e8e5b1ff2bc5",
+      "ref_no": "TC-00042",
+      "name": "TEST_CSV_C_6e32f4",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "ceede0ba-19d8-44ec-bdf5-5685e6e423f3",
+      "ref_no": "TC-00043",
+      "name": "TEST_CSV_A_3a9916",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "f86fe2cd-232f-4f1c-bb27-21fa321761fe",
+      "ref_no": "TC-00044",
+      "name": "TEST_CSV_C_fefbb2",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "a9c08e7a-f303-4a40-b6b0-eeb706547572",
+      "ref_no": "TC-00045",
+      "name": "TEST_CSV_A_3a9916 (Copy)",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "4597aeb1-6afb-41c8-94f2-2190c436bd60",
+      "ref_no": "TC-00046",
+      "name": "TEST_CSV_A_3a9916 (Copy) (Copy)",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "27d4bcd0-6b60-4ff5-8834-f291f6bd0920",
+      "ref_no": "TC-00047",
+      "name": "Valve",
+      "category": "Valve"
+    },
+    {
+      "id": "de68602d-1b1b-49dc-bac1-5c0c68d5413e",
+      "ref_no": "TC-00049",
+      "name": "New",
+      "category": "Valve"
+    },
+    {
+      "id": "22672686-cb60-489d-a5e0-e98314872a49",
+      "ref_no": "TC-00046",
+      "name": "Gate valve Body casting ",
+      "category": "Valve"
+    },
+    {
+      "id": "f8db69bf-603e-4949-bbc2-aad6c7bcd52a",
+      "ref_no": "TC-00047",
+      "name": "Globe Valve Body ",
+      "category": "Vale"
+    },
+    {
+      "id": "4c7c6ae8-09e2-4eef-be1d-bb3ddc18cc7d",
+      "ref_no": "TC-00048",
+      "name": "Check Valve Body ",
+      "category": "Valve"
+    },
+    {
+      "id": "9ce99960-f4e2-46c0-9335-08dc2c36748d",
+      "ref_no": "TC-00049",
+      "name": "Butterfly Valve Body ",
+      "category": "Valve "
+    },
+    {
+      "id": "33eee9af-81b9-4e31-bc98-b8bcef6bbf96",
+      "ref_no": "TC-00050",
+      "name": "Ball Valve Body ",
+      "category": "Valve"
+    },
+    {
+      "id": "12ae398b-4865-40fc-8e6b-476b9910a7d9",
+      "ref_no": "TC-00051",
+      "name": "Pum Casting ",
+      "category": "Pump"
+    },
+    {
+      "id": "61641372-0b65-4133-88cf-a5fbf1b23d68",
+      "ref_no": "TC-00052",
+      "name": "Pump Impeller casting ",
+      "category": "Pump"
+    },
+    {
+      "id": "cce75e08-4877-442d-81ef-ba9bcf11fec2",
+      "ref_no": "TC-00053",
+      "name": "Pump cover Casting ",
+      "category": "Pump"
+    },
+    {
+      "id": "a3906de6-c1ad-4ec0-b69d-8c2464b8daf6",
+      "ref_no": "TC-00054",
+      "name": "Pump Bracket Casting ",
+      "category": "Pump"
+    },
+    {
+      "id": "d1012029-10e2-4038-99bf-a53916f06a22",
+      "ref_no": "TC-00055",
+      "name": "Shaft Sleev Casting ",
+      "category": "Pump"
+    },
+    {
+      "id": "3ee43c84-9d51-4c6a-b146-b5106856b42a",
+      "ref_no": "TC-00056",
+      "name": "Jaw Plate (Fixed)",
+      "category": "Mining and Crushing Parts"
+    },
+    {
+      "id": "82bcc0df-e9f9-4ea1-996f-d894286221ff",
+      "ref_no": "TC-00057",
+      "name": "Cone Mantle Casting ",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "b4f2e52c-ec79-4270-8e51-cf904fc58248",
+      "ref_no": "TC-00058",
+      "name": "Blow Bar Casting ",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "92fdc3e6-62cc-4cd6-ac9a-cd3390461229",
+      "ref_no": "TC-00059",
+      "name": "Crusher Liner Casting ",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "27b2a943-d9aa-4bbb-a85a-ce9146b2ffff",
+      "ref_no": "TC-00060",
+      "name": "Impact Crusher Bar Casting ",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "78f540d2-a1b9-4327-b3c2-c79ac35b074c",
+      "ref_no": "TC-00061",
+      "name": "Sprocket Casting ",
+      "category": "General Engineering Parts"
+    },
+    {
+      "id": "52d82910-da00-4b5c-8aa5-2d09ccc425d8",
+      "ref_no": "TC-00062",
+      "name": "Gear Blank",
+      "category": "General Engineering Parts "
+    },
+    {
+      "id": "44ac72b4-7548-40cb-aea2-d6cc62a1edbd",
+      "ref_no": "TC-00063",
+      "name": "Pulley Casting ",
+      "category": "General Engineering Parts "
+    },
+    {
+      "id": "6019f8ca-12f1-4b5f-9bb6-1af87982be1c",
+      "ref_no": "TC-00064",
+      "name": "Rope Drum Casting ",
+      "category": "General Engineering Parts "
+    },
+    {
+      "id": "18c7c54a-0145-4977-9027-732a8cf7b36f",
+      "ref_no": "TC-00065",
+      "name": "Machine Base Casting ",
+      "category": "General Engineering Parts "
+    },
+    {
+      "id": "326f50dd-bb81-4b6a-980d-d0ec16651c39",
+      "ref_no": "TC-00066",
+      "name": "Mill Roll Casting ",
+      "category": "Steel Mill Parts"
+    },
+    {
+      "id": "dc6c0d95-5907-4ee2-b84f-c8a5d8a4d4a3",
+      "ref_no": "TC-00067",
+      "name": "Roll Neck Casting ",
+      "category": "Steel Mill Parts "
+    },
+    {
+      "id": "807b1fe0-cc14-44c6-83ad-923874a02e1f",
+      "ref_no": "TC-00068",
+      "name": "Chock Casting ",
+      "category": "Steel Mill parts "
+    },
+    {
+      "id": "a42bc243-72fe-4788-8806-6bf828762fb9",
+      "ref_no": "TC-00069",
+      "name": "Guide shoe Casting ",
+      "category": "Steel Mill parts "
+    },
+    {
+      "id": "b3606f7b-c81a-4551-ab00-5dd1a0c20cd5",
+      "ref_no": "TC-00070",
+      "name": "Sow Mold ",
+      "category": "Aluminium Smelting Parts"
+    },
+    {
+      "id": "2ca2493a-988d-4f9d-8aa3-c9a4c387193a",
+      "ref_no": "TC-00071",
+      "name": "Dross Drain Pan",
+      "category": "Aluminium Smelting Parts"
+    },
+    {
+      "id": "463aec08-5fe2-46dc-96a3-907f2369241c",
+      "ref_no": "TC-00072",
+      "name": "Ingot Mould Casting",
+      "category": "Aluminium Smelting Parts"
+    },
+    {
+      "id": "f2c092ef-5a3a-4b9d-aa12-2c26dbc6b7a1",
+      "ref_no": "TC-00073",
+      "name": "Pouring Spout",
+      "category": "Aluminium Smelting Parts"
+    },
+    {
+      "id": "84b6a41a-be26-4f92-9c51-f1f909677d06",
+      "ref_no": "TC-00074",
+      "name": "Furnace Door Casting ",
+      "category": "Aluminium Smelting Parts "
+    },
+    {
+      "id": "186ee16a-802c-4bbb-910a-5a599aab8455",
+      "ref_no": "TC-00075",
+      "name": "Monel Valve Body Casting ",
+      "category": "Valve Castings"
+    },
+    {
+      "id": "8b104b54-8da3-4ec4-8be9-0f8aa50ddd57",
+      "ref_no": "TC-00076",
+      "name": "Monel Valve End Piece Casting ",
+      "category": "Valve Castings "
+    },
+    {
+      "id": "d9bb4c50-2660-4755-8d39-06b581b8be4f",
+      "ref_no": "TC-00077",
+      "name": "Backup Ring Casting",
+      "category": "Valve Castings "
+    },
+    {
+      "id": "fb8959c3-fba3-4af0-9deb-e6383bae3a8b",
+      "ref_no": "TC-00078",
+      "name": "Stuffing Box Casting",
+      "category": "Valve Castings "
+    },
+    {
+      "id": "9065d7f3-f570-443b-81c8-c79ac00cbc8f",
+      "ref_no": "TC-00079",
+      "name": "Solid Ball Casting ",
+      "category": "Valve Castings "
+    },
+    {
+      "id": "35144991-7113-4b2c-862e-6fc8ecfc5358",
+      "ref_no": "TC-00080",
+      "name": "Rolute Casting ",
+      "category": "Pump Castings"
+    },
+    {
+      "id": "36c67657-4e5f-4e6a-ab00-c7ecf782dc46",
+      "ref_no": "TC-00081",
+      "name": "Back Plate Casting ",
+      "category": "Pump Castings "
+    },
+    {
+      "id": "300adf04-5780-462c-b8da-68700781c8ba",
+      "ref_no": "TC-00082",
+      "name": "Throat Bush",
+      "category": "Pump Castings "
+    },
+    {
+      "id": "51c3d6be-f896-48aa-aaba-6e58625e99ab",
+      "ref_no": "TC-00083",
+      "name": "Lantern Ring Casting ",
+      "category": "Pump Castings "
+    },
+    {
+      "id": "4414b1d3-f9dd-4dc3-b6a5-6cc5dec45b3a",
+      "ref_no": "TC-00084",
+      "name": "Gland Follower Casting ",
+      "category": "Pump Castings "
+    },
+    {
+      "id": "d97984da-8f74-4e44-ae79-712a30e3c06b",
+      "ref_no": "TC-00085",
+      "name": "Mantle Segment Casting ",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "0be60581-8565-4192-ae89-21d1c70961c7",
+      "ref_no": "TC-00086",
+      "name": "Cheek Plate",
+      "category": "Mining and Crushing Parts "
+    },
+    {
+      "id": "ec78d198-76bb-49a1-b19c-57646e8a78ae",
+      "ref_no": "TC-00087",
+      "name": "Grizzy Bar",
+      "category": "Mining and Crushing Parts"
+    }
+  ]
+}

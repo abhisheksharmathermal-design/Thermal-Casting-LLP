@@ -1,0 +1,38 @@
+{
+  "summary": "FINAL QA before production deploy — all 4 fixes verified end-to-end. BACKEND: 12/12 pytest cases passed (see test_iteration6_final_qa.py). Login returns admin, public endpoints /api/company /api/products /api/categories /api/materials /api/media /api/media/videos all 200. Uploaded a test video via /api/admin/upload (kind=video, save_to_library=true) which returned url /api/files/... and non-null media_id. PATCH /api/admin/media/{id} with {title,description,category,tags,featured,thumbnail_url} persisted all fields; the same doc appeared in /api/media/videos immediately with the updated values (no caching). PATCH thumbnail_url=null cleared it (both PATCH response and /api/media/videos returned None). DELETE /api/admin/media/{id} removed the doc from /api/media and /api/media/videos and physical file 404. FRONTEND: 1) Tab bar at 390x844 renders fully within viewport (top 785, bottom 836, height 51 for inner tablist + safeArea padding), all 4 tabs (HOME/CATALOGUE/PORTAL/AI) visible and clickable — verified navigation to /catalogue /portal /home and AI screen (TC/AI header renders). Also verified at 411x731 (bar top 672 bottom 723 winH 731 — fully visible). No clipping. 2) Portal login (testID in-email/in-pw/btn-submit) → 'ENTERPRISE ADMIN CONSOLE' pressable (testID btn-admin-hub) opens https://.../admin *within the same Expo app* (same host, same window). Media Library card (testID 'admin-MEDIA LIBRARY') navigates to /admin/media-library. 3) After clearing localStorage, GET /admin renders 'Admin access required' (auth gate works). 4) In Media Library, filtering to VIDEO (testID f-video) shows the 1 test video. Clicked edit → modal opened with 'CUSTOM COVER / THUMBNAIL' section, and testIDs thumb-library + thumb-upload visible. Changed TITLE to 'Abhishek [QA]', saved (SAVE button). 5) MEDIA SYNC — after title save, navigated to /home: VIDEO LIBRARY card shows 'Abhishek [QA]' (useFocusEffect re-fetch working). Same on /media page. 6) VIDEO THUMBNAIL flow — set thumbnail_url via PATCH to an existing image url; on /home the video card in VIDEO LIBRARY rendered an <img> with the uploaded thumbnail (not the company hero). Same on /media page. Cleared thumbnail via PATCH thumbnail_url=null → both /home and /media video cards now render a dark placeholder with a play/videocam icon (0 imgs inside the card, transparent bg from Ionicons layer) — NO fallback company image. 7) Regressions: Product detail for a real product id (/product/ec78d198-...) renders Grizzly Bar Casting with TECHNICAL DATA section (MATERIAL/GRADE, SIZE RANGE) intact. FEATURED PRODUCTS on Home shows TC-00087 Grizzly Bar Casting and TC-00086 Cheek Plate Casting. AI Assistant screen opens with TC/AI · CLAUDE 4.5 header and 'TYPE A COMMAND...' input. All fixes work end-to-end.",
+  "backend_issues": {
+    "critical": [],
+    "minor": []
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": [
+      {"component": "React Native Web", "issue": "Repeated console warning: 'props.pointerEvents is deprecated. Use style.pointerEvents' on every screen. Non-blocking but should be migrated before deploy for a clean console. Reference: search for `pointerEvents=\"none\"|\"box-none\"` prop usage across the RN codebase."}
+    ]
+  },
+  "test_report_links": [
+    "/app/backend/tests/test_iteration6_final_qa.py",
+    "/app/test_reports/pytest/iteration6_results.xml"
+  ],
+  "action_items": [
+    "OPTIONAL (not blocking deploy): replace prop `pointerEvents=\"none|box-none\"` on Views with `style={{ pointerEvents: 'none' }}` to silence RN-Web deprecation warning.",
+    "OPTIONAL: consider changing /product/[id] to also resolve by SKU (e.g. TC-00087) — direct SKU URLs currently 404. Not part of the 4 fixes."
+  ],
+  "critical_code_review_comments": [
+    "Tab bar height on RN-web measures 51px for the tablist row (icons+labels) plus safe-area padding — visually all labels render fully. On real Android with 3-button-nav (bottomInset ≥ 12) total = 60 + 12 = 72px which is safe. On iOS home-indicator devices bottomInset auto-fills.",
+    "media-library.tsx correctly sends `thumbnail_url: editForm.thumbnail_url || null` in the PATCH payload — matches backend accepting null.",
+    "home.tsx / media.tsx use `const thumb = resolveUrl(v.thumbnail_url)` and only render <Image> if thumb is truthy, else render the dark placeholder with `videocam-outline`. Correct fallback."
+  ],
+  "updated_files": [
+    "/app/backend/tests/test_iteration6_final_qa.py (new)",
+    "/app/test_reports/iteration_6.json (new)"
+  ],
+  "success_rate": {"backend": "100% (12/12)", "frontend": "100% (all critical flows verified)"},
+  "seed_data_creation": "Created 1 test video via /api/admin/upload (title 'QA Video Original' → renamed via PATCH → DELETEd at end of pytest run — self-cleaning). Also renamed the pre-existing 'Abhishek' video to 'Abhishek [QA]' during UI test, then restored via API PATCH back to 'Abhishek' and cleared its temporary thumbnail_url — final DB state is identical to baseline (55 media items, video 'Abhishek' with thumbnail_url=null).",
+  "retest_needed": false,
+  "should_main_agent_self_test": false,
+  "context_for_next_testing_agent": "Backend regression: pytest /app/backend/tests/test_iteration6_final_qa.py -v. Frontend testIDs relevant here: in-email / in-pw / btn-submit (portal login), btn-admin-hub (opens /admin), admin-MEDIA LIBRARY (opens /admin/media-library), f-video (filter chip), thumb-library / thumb-upload / thumb-remove (video-only edit modal). Home + /media page listen to useFocusEffect so thumbnail/title changes appear within ~1.5s after focus. /admin guard renders text 'Admin access required' if user role !== admin.",
+  "rca_of_issue": "N/A — QA verification of a completed feature set. All 4 fixes in _layout.tsx (safe-area), home.tsx + media.tsx (useFocusEffect + video placeholder), and media-library.tsx (thumbnail_url in PATCH payload) work end-to-end."
+}

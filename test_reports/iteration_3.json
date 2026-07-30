@@ -1,0 +1,63 @@
+{
+  "summary": "Phase 3 backend-only testing. 35/35 tests PASSED in /app/backend/tests/test_phase3_polish.py. Covered: new admin login (abhisheksharma@thermalcasting.com), removal of all three old staff accounts (all return 401 as required), customer signup still functional (backend intact, /auth/register requires full_name), /auth/me strips password_hash and session_id, session listing with current=true and user_agent/ip/last_seen/expires_at fields, 10-session cap with oldest revoked (reason session_limit) — verified 11-login flow revokes oldest, DELETE /auth/sessions/{sid} revokes the target and its token returns 401 with 'Session revoked or expired', logout-others returns revoked_count and revokes all except current, /auth/logout revokes current session. Change-password: 401 on wrong current, 400 on mismatch, 400 on same-as-current, 422 on <8 chars, success revokes other sessions (current retained), login with new pw works, audit-log records auth.password_change, password RESET back to original TCL@casting1234 so downstream tests keep working. Uploads: 401 without token, 403 with customer role, image/png upload returns {id,url,content_type,size} with url starting /api/files/, static mount at BASE_URL/api/files/<filename> serves the file (image/* content-type), DELETE /admin/upload/{id} removes file and subsequent static GET returns 404, text/plain rejected 400, empty file rejected 400. Regression: 40 products, 15 enabled materials (16 seeded, 1 disabled — see minor note), 10 categories, media/videos, guest RFQ (with correct schema company_name/contact_person/phone/project_details/items), AI chat with session_id all pass. RBAC: admin CAN create materials/categories/news/read company/read audit-logs; admin CANNOT create or delete staff (403 verified — enforced by require_super_admin).",
+  "backend_issues": {
+    "critical": [],
+    "minor": [
+      {
+        "endpoint": "GET /api/materials",
+        "issue": "Endpoint filters {enabled: True} and now returns 15 materials, but the seed inserted 16. One material has been toggled to enabled=false (likely leaked from a prior test iteration). Not a Phase 3 regression, but seed drift worth noting — consider re-seeding on next boot or reviewing tests that toggle materials."
+      },
+      {
+        "endpoint": "GET /api/admin/materials",
+        "issue": "No GET handler for /admin/materials (only POST/PATCH/DELETE). If admin UI needs to list disabled materials too, add a GET /admin/materials endpoint (currently only enabled ones are visible via public /materials)."
+      },
+      {
+        "endpoint": "GET /api/admin/categories",
+        "issue": "Same as materials — no admin GET. Only /categories (public) exists."
+      },
+      {
+        "endpoint": "POST /api/auth/change-password",
+        "issue": "Order of validation: same-as-current check (400) runs BEFORE verifying current_password (401). If a user submits the correct current_password reused as new_password, they get 400 even though credentials are valid — acceptable, but consider verifying current_password first for clearer error semantics."
+      }
+    ]
+  },
+  "frontend_issues": {
+    "ui_bugs": [],
+    "integration_issues": [],
+    "design_issues": [],
+    "react_native_issues": []
+  },
+  "test_report_links": [
+    "/app/backend/tests/conftest.py",
+    "/app/backend/tests/test_phase3_polish.py",
+    "/app/test_reports/pytest/phase3_results.xml"
+  ],
+  "action_items": [
+    "Investigate why 1 material is disabled — either re-seed to enable=true or accept the drift. Consider making the seed idempotently re-enable core materials.",
+    "Optionally add GET /api/admin/materials and GET /api/admin/categories that return disabled items too (currently admin UI has to rely on the public filtered endpoint).",
+    "server.py is 1537 lines — well past the 700-line split threshold. Now overdue for refactor into routers (auth, sessions, upload, products, materials, categories, media, rfq, ai, admin_cms, staff, audit, csv).",
+    "Long-standing minor: replace count_documents()+1 ref_no generators with atomic counters (RFQ, inquiries, products, CSV import) — carried over from iteration 2.",
+    "conftest.py was updated to use the new primary admin. Older /backend/tests/test_thermal_casting_backend.py and test_phase2_cms.py still reference the deleted admin/superadmin/sales accounts in their own fixtures/test bodies and will fail if re-run — main agent should decide whether to archive them or port to the new single-admin model."
+  ],
+  "critical_code_review_comments": [
+    "JWT now carries sid claim and get_current_user validates the session on every request (looks up db.sessions, checks revoked=False, updates last_seen). Correct implementation of revocable sessions.",
+    "_prune_and_create_session correctly (a) revokes expired sessions past absolute expiry, (b) while active >= 10, revokes the OLDEST by last_seen with reason=session_limit, then inserts the new one — verified via 11 logins test.",
+    "/auth/me correctly strips session_id from the returned dict (line 308-309) — verified.",
+    "change-password revokes {revoked:False, id: {$ne: current_sid}} — current session retained, others revoked with reason=password_change. Verified.",
+    "Upload endpoint enforces ALLOWED_MIME whitelist (image/pdf/video), 20MB cap, sha256 checksum, uuid filename, and audit-logs upload.create/upload.delete. Static files served at app-level /api/files (NOT under api router) — request bypasses JSON handlers as intended.",
+    "Delete upload correctly removes both the filesystem file (unlink) and the db.uploads row; subsequent static GET returns 404 (verified).",
+    "require_super_admin enforcement remains for /admin/staff — admin (not super_admin) correctly gets 403 on POST and DELETE staff. Since no super_admin exists in the seeded DB, staff CRUD is effectively locked (as intended by problem statement).",
+    "Seed function seeds only the primary admin if not exists (never overwrites) — behaviour matches spec.",
+    "server.py is 1537 lines — modularization is now urgent."
+  ],
+  "updated_files": [
+    "/app/backend/tests/conftest.py (updated to use new admin abhisheksharma@thermalcasting.com and register a fresh customer via /auth/register with full_name field; admin_token fixture scope changed from session to function so tests that revoke sessions do not poison other tests)",
+    "/app/backend/tests/test_phase3_polish.py (new — 35 tests covering all Phase 3 scenarios in the review request)"
+  ],
+  "success_rate": {"backend": "100% (35/35)", "frontend": "N/A - not tested (backend-only request)"},
+  "seed_data_creation": "None persisted. All test-created materials/categories/news/uploads/customers are either deleted in-test or ephemeral (customer accounts registered with random emails remain in the DB but are isolated by prefix cust_<uuid> and not referenced by later tests). Change-password test resets the admin password back to TCL@casting1234 at the end so downstream tests continue to work.",
+  "retest_needed": false,
+  "should_main_agent_self_test": true,
+  "context_for_next_testing_agent": "Backend base: https://casting-master-dna.preview.emergentagent.com/api. Only ONE seeded staff: abhisheksharma@thermalcasting.com / TCL@casting1234 (role=admin). Old admin/superadmin/sales accounts have been DELETED and MUST return 401. Session-management endpoints under /api/auth/{sessions, sessions/{sid}, sessions/logout-others, logout, change-password}. JWT now has 'sid' claim — every request re-validates the session. Max 10 active sessions per user; oldest gets reason=session_limit. Uploads: POST /api/admin/upload (multipart, admin only, image/pdf/video, 20MB cap), served at BASE_URL/api/files/<filename> (StaticFiles mount OUTSIDE /api router). db.uploads holds registry. IMPORTANT for future test runs: (1) pytest.ini uses -n 2 --dist loadscope by default; the session-management tests must run serially because parallel workers logging in as the same admin trigger session_limit revocations across classes. Use `-n 0` when running only Phase 3, or keep session-heavy tests inside one loadscope (single class). (2) admin_token fixture is now function-scoped in conftest. (3) Old test files test_thermal_casting_backend.py and test_phase2_cms.py have fixtures/tests referencing deleted accounts (admin@thermalcasting.com etc.) — they will fail if run against the current DB.",
+  "rca_of_issue": "No blocking issues. Only observation: /materials returns 15 not 16 because one material has enabled=false in the DB — data drift from previous iterations, not a Phase 3 regression. Recommend an idempotent re-enable step in the seed to guarantee 16 visible materials post-boot."
+}
