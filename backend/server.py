@@ -1733,7 +1733,19 @@ async def root():
 
 @api.get("/health")
 async def health():
-    return {"status": "healthy", "time": now_utc().isoformat()}
+    try:
+        await client.admin.command("ping")
+        return {
+            "status": "healthy",
+            "database": "connected",
+            "time": now_utc().isoformat(),
+        }
+    except Exception:
+        logger.exception("MongoDB health check failed")
+        raise HTTPException(
+            status_code=503,
+            detail="Database unavailable",
+        )
 
 app.include_router(api)
 
