@@ -723,6 +723,7 @@ async def admin_stats(user=Depends(require_admin)):
         "media": await db.media.count_documents({}),
         "rfqs": await db.rfqs.count_documents({}),
         "customers": await db.users.count_documents({"role": "customer"}),
+        "ai_enabled": AI_ENABLED,
         "rfqs_by_status": {
             s: await db.rfqs.count_documents({"status": s})
             for s in ["submitted", "under_review", "engineering_review", "quoted", "closed"]
