@@ -16,7 +16,8 @@ export default function ProductEdit() {
     weight: "", size: "", pressure_class: "", temperature_rating: "",
     casting_process: "", machining_details: "", inspection_details: "",
     heat_treatment: "", manufacturing_capacity: "",
-    image_url: "", featured: false, enabled: true,
+   image_url: "",
+gallery: [], featured: false, enabled: true,
     seo_title: "", seo_description: "", seo_keywords: "",
   });
   const [busy, setBusy] = useState(false);
