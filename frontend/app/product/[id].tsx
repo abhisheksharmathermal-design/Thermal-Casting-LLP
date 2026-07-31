@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable, ActivityIndicator, Linking } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Pressable,
+  ActivityIndicator,
+  Linking,
+  Dimensions,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+} from "react-native";
 import { Image } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -13,14 +24,31 @@ export default function ProductDetail() {
   const router = useRouter();
   const [p, setP] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-
+const [activeImage, setActiveImage] = useState(0);
   useEffect(() => { (async () => {
     try { setP(await api.product(id)); } catch (e) { console.log(e); } setLoading(false);
   })(); }, [id]);
 
   if (loading) return <View style={s.center}><ActivityIndicator color={colors.brand} /></View>;
   if (!p) return <View style={s.center}><Text>Not found</Text></View>;
+const productImages = [
+  p.image_url,
+  ...(Array.isArray(p.gallery) ? p.gallery : []),
+].filter((image: string, index: number, all: string[]) => {
+  return Boolean(image) && all.indexOf(image) === index;
+});
 
+const screenWidth = Dimensions.get("window").width;
+
+const handleImageScroll = (
+  event: NativeSyntheticEvent<NativeScrollEvent>
+) => {
+  const index = Math.round(
+    event.nativeEvent.contentOffset.x / screenWidth
+  );
+
+  setActiveImage(index);
+};
   return (
     <View style={{ flex: 1, backgroundColor: colors.surface }}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -31,14 +59,89 @@ export default function ProductDetail() {
       </SafeAreaView>
 
       <ScrollView contentContainerStyle={{ paddingBottom: 160 }}>
-        <View style={s.imgWrap}>
-          {p.image_url ? (
-            <Image source={{ uri: resolveUrl(p.image_url) }} style={StyleSheet.absoluteFill} contentFit="cover" />
-          ) : (
-            <View style={s.imgFallback}><Ionicons name="cube-outline" size={80} color={colors.muted} /></View>
-          )}
-        </View>
+      <View>
+  {productImages.length > 0 ? (
+    <>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onMomentumScrollEnd={handleImageScroll}
+        scrollEventThrottle={16}
+      >
+        {productImages.map((image: string, index: number) => (
+          <View
+            key={`${image}-${index}`}
+            style={[s.imgWrap, { width: screenWidth }]}
+          >
+            <Image
+              source={{ uri: resolveUrl(image) }}
+              style={StyleSheet.absoluteFill}
+              contentFit="contain"
+              transition={200}
+            />
 
+            {productImages.length > 1 && (
+              <View style={s.imageCounter}>
+                <Text style={s.imageCounterText}>
+                  {activeImage + 1} / {productImages.length}
+                </Text>
+              </View>
+            )}
+          </View>
+        ))}
+      </ScrollView>
+
+      {productImages.length > 1 && (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={s.thumbnailList}
+        >
+          {productImages.map((image: string, index: number) => (
+            <View
+              key={`thumbnail-${image}-${index}`}
+              style={[
+                s.thumbnailWrap,
+                activeImage === index && s.activeThumbnail,
+              ]}
+            >
+              <Image
+                source={{ uri: resolveUrl(image) }}
+                style={s.thumbnailImage}
+                contentFit="cover"
+              />
+            </View>
+          ))}
+        </ScrollView>
+      )}
+
+      {productImages.length > 1 && (
+        <View style={s.dots}>
+          {productImages.map((_: string, index: number) => (
+            <View
+              key={`dot-${index}`}
+              style={[
+                s.dot,
+                activeImage === index && s.activeDot,
+              ]}
+            />
+          ))}
+        </View>
+      )}
+    </>
+  ) : (
+    <View style={s.imgWrap}>
+      <View style={s.imgFallback}>
+        <Ionicons
+          name="cube-outline"
+          size={80}
+          color={colors.muted}
+        />
+      </View>
+    </View>
+  )}
+</View>
         <View style={s.body}>
           <Text style={s.cat}>{p.category}</Text>
           <Text style={s.name}>{p.name}</Text>
@@ -134,7 +237,68 @@ const s = StyleSheet.create({
   back: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   topTitle: { fontSize: fs.sm, fontWeight: "900", letterSpacing: 1.4, color: colors.brand },
   imgWrap: { width: "100%", aspectRatio: 4 / 3, backgroundColor: colors.surface3, borderBottomWidth: 1, borderBottomColor: colors.borderStrong, position: "relative" },
-  imgFallback: { flex: 1, alignItems: "center", justifyContent: "center" },
+  imgFallback: imageCounter: {
+  position: "absolute",
+  right: spacing.md,
+  bottom: spacing.md,
+  paddingHorizontal: spacing.sm,
+  paddingVertical: 5,
+  borderRadius: 14,
+  backgroundColor: "rgba(0,0,0,0.65)",
+},
+
+imageCounterText: {
+  color: "#fff",
+  fontSize: fs.xs,
+  fontWeight: "800",
+},
+
+thumbnailList: {
+  paddingHorizontal: spacing.md,
+  paddingVertical: spacing.sm,
+  gap: spacing.sm,
+  backgroundColor: colors.surface2,
+},
+
+thumbnailWrap: {
+  width: 66,
+  height: 66,
+  padding: 2,
+  borderWidth: 1,
+  borderColor: colors.borderStrong,
+  backgroundColor: colors.surface,
+},
+
+activeThumbnail: {
+  borderWidth: 3,
+  borderColor: colors.brand,
+},
+
+thumbnailImage: {
+  width: "100%",
+  height: "100%",
+},
+
+dots: {
+  flexDirection: "row",
+  justifyContent: "center",
+  alignItems: "center",
+  gap: 6,
+  paddingBottom: spacing.sm,
+  backgroundColor: colors.surface2,
+},
+
+dot: {
+  width: 7,
+  height: 7,
+  borderRadius: 4,
+  backgroundColor: colors.borderStrong,
+},
+
+activeDot: {
+  width: 20,
+  backgroundColor: colors.brand,
+},
   body: { padding: spacing.lg, backgroundColor: colors.surface2, borderBottomWidth: 1, borderBottomColor: colors.borderStrong },
   cat: { fontSize: fs.xs, letterSpacing: 1.4, fontWeight: "800", color: colors.brand, textTransform: "uppercase" },
   name: { fontSize: fs.xxl, fontWeight: "900", color: colors.onSurface, marginTop: 4, letterSpacing: -0.5 },
