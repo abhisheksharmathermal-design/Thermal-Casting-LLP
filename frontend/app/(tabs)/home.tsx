@@ -88,10 +88,6 @@ export default function HomeScreen() {
             <Ionicons name="document-text-outline" size={20} color={colors.onSurface} />
             <Text style={s.actionTxt}>Request Quote</Text>
           </Pressable>
-          <Pressable style={s.actionBtn} onPress={() => router.push("/(tabs)/assistant")} testID="action-ai">
-            <Ionicons name="sparkles-outline" size={20} color={colors.onSurface} />
-            <Text style={s.actionTxt}>AI Assistant</Text>
-          </Pressable>
         </View>
 
         {/* NEWS & ANNOUNCEMENTS */}
