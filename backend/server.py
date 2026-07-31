@@ -28,8 +28,8 @@ DB_NAME = os.environ['DB_NAME']
 JWT_SECRET = os.environ['JWT_SECRET']
 JWT_ALGORITHM = os.environ.get('JWT_ALGORITHM', 'HS256')
 JWT_EXPIRE_MINUTES = int(os.environ.get('JWT_EXPIRE_MINUTES', 1440))
-EMERGENT_LLM_KEY = os.environ.get('EMERGENT_LLM_KEY', '')
-AI_ENABLED = os.environ.get("AI_ENABLED", "false").lower() == "true"
+EMERGENT_LLM_KEY = os.environ.get("EMERGENT_LLM_KEY", "")
+AI_ENABLED = False
 client = AsyncIOMotorClient(MONGO_URL)
 db = client[DB_NAME]
 
@@ -723,7 +723,7 @@ async def admin_stats(user=Depends(require_admin)):
         "media": await db.media.count_documents({}),
         "rfqs": await db.rfqs.count_documents({}),
         "customers": await db.users.count_documents({"role": "customer"}),
-        "ai_enabled": AI_ENABLED,
+        
         "rfqs_by_status": {
             s: await db.rfqs.count_documents({"status": s})
             for s in ["submitted", "under_review", "engineering_review", "quoted", "closed"]
