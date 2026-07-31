@@ -56,7 +56,64 @@ gallery: [], featured: false, enabled: true,
             <AdminField label="SHORT DESCRIPTION" value={form.short_description} onChange={(v: string) => set("short_description", v)} />
             <AdminField label="DESCRIPTION" value={form.description} onChange={(v: string) => set("description", v)} multi />
             <UploadField label="PRODUCT IMAGE" value={form.image_url} onChange={(v: string) => set("image_url", v)} testID="p-image" />
-          </View>
+        <Text
+  style={{
+    marginTop: spacing.md,
+    marginBottom: spacing.sm,
+    color: colors.onSurface2,
+    fontSize: fs.xs,
+    fontWeight: "800",
+    letterSpacing: 1,
+  }}
+>
+  PRODUCT GALLERY
+</Text>
+
+{(form.gallery || []).map((image: string, index: number) => (
+  <View
+    key={`gallery-${index}`}
+    style={{
+      marginBottom: spacing.md,
+      padding: spacing.sm,
+      borderWidth: 1,
+     borderColor: colors.borderStrong,
+      backgroundColor: colors.surface,
+    }}
+  >
+    <UploadField
+      label={`GALLERY IMAGE ${index + 1}`}
+      value={image}
+      onChange={(value: string) => {
+        const updatedGallery = [...(form.gallery || [])];
+
+        if (value) {
+          updatedGallery[index] = value;
+        } else {
+          updatedGallery.splice(index, 1);
+        }
+
+        set("gallery", updatedGallery);
+      }}
+      testID={`p-gallery-${index}`}
+    />
+
+    <AdminButton
+      title="REMOVE IMAGE"
+      onPress={() => {
+        const updatedGallery = [...(form.gallery || [])];
+        updatedGallery.splice(index, 1);
+        set("gallery", updatedGallery);
+      }}
+    />
+  </View>
+))}
+
+<AdminButton
+  title="+ ADD GALLERY IMAGE"
+  onPress={() => {
+    set("gallery", [...(form.gallery || []), ""]);
+  }}
+/>  </View>
 
           <AdminSectionTitle title="TECHNICAL SPECS" />
           <View style={{ padding: spacing.md, backgroundColor: colors.surface2, borderWidth: 1, borderColor: colors.borderStrong, marginBottom: spacing.md }}>
