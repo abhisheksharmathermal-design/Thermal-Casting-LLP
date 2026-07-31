@@ -237,7 +237,13 @@ const s = StyleSheet.create({
   back: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   topTitle: { fontSize: fs.sm, fontWeight: "900", letterSpacing: 1.4, color: colors.brand },
   imgWrap: { width: "100%", aspectRatio: 4 / 3, backgroundColor: colors.surface3, borderBottomWidth: 1, borderBottomColor: colors.borderStrong, position: "relative" },
-  imgFallback: imageCounter: {
+  imgFallback: {
+  flex: 1,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+imageCounter: {
   position: "absolute",
   right: spacing.md,
   bottom: spacing.md,
