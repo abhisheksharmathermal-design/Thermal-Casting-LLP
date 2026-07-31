@@ -17,7 +17,6 @@ const CARDS: Card[] = [
   { title: "MEDIA LIBRARY", icon: "images-outline", route: "/admin/media-library", roles: ["super_admin", "admin"], desc: "Upload, replace & organise images/videos/PDFs" },
   { title: "CUSTOMERS", icon: "people-outline", route: "/admin/customers", roles: ["super_admin", "admin", "sales_executive"], desc: "View customers & activity" },
   { title: "RFQs", icon: "document-text-outline", route: "/admin/rfqs", roles: ["super_admin", "admin", "sales_executive"], desc: "Assign, quote & track inquiries" },
-  { title: "AI KNOWLEDGE", icon: "sparkles-outline", route: "/admin/ai-docs", roles: ["super_admin", "admin"], desc: "Upload documents grounding the AI" },
   { title: "STAFF & ROLES", icon: "shield-outline", route: "/admin/staff", roles: ["super_admin"], desc: "Manage Admin & Sales Exec accounts" },
   { title: "WORDPRESS SYNC", icon: "sync-outline", route: "/admin/sync", roles: ["super_admin", "admin"], desc: "Two-way sync with WordPress site" },
   { title: "AUDIT LOGS", icon: "time-outline", route: "/admin/audit", roles: ["super_admin", "admin"], desc: "All admin activity & changes" },
