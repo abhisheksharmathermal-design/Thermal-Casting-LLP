@@ -422,6 +422,7 @@ async def storage_put(filename: str, data: bytes, content_type: str) -> str:
 
     endpoint = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{filename}"
     headers = {
+        "apikey": SUPABASE_SERVICE_KEY,
         "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
         "Content-Type": content_type,
         "x-upsert": "true",
@@ -435,7 +436,7 @@ async def storage_put(filename: str, data: bytes, content_type: str) -> str:
         raise HTTPException(status_code=502, detail=f"Storage upload failed: {e}")
     if r.status_code not in (200, 201):
         logger.error(f"Supabase upload {r.status_code}: {r.text[:300]}")
-        raise HTTPException(status_code=502, detail="Storage upload failed")
+        raise HTTPException(status_code=502, detail=f"Storage upload failed ({r.status_code}): {r.text[:200]}")
     return f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/{filename}"
 
 
@@ -455,7 +456,10 @@ async def storage_delete(filename: str) -> None:
     endpoint = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{filename}"
     try:
         async with httpx.AsyncClient(timeout=30) as c:
-            await c.delete(endpoint, headers={"Authorization": f"Bearer {SUPABASE_SERVICE_KEY}"})
+            await c.delete(endpoint, headers={
+                "apikey": SUPABASE_SERVICE_KEY,
+                "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+            })
     except Exception as e:
         logger.warning(f"Supabase delete failed {filename}: {e}")
     fp = UPLOAD_DIR / filename
