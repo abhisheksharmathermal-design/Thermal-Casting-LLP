@@ -397,6 +397,74 @@ ALLOWED_MIME = {
 MAX_IMAGE_BYTES = 20 * 1024 * 1024   # 20 MB — images/PDFs
 MAX_VIDEO_BYTES = 100 * 1024 * 1024  # 100 MB — videos (matches admin UI cap)
 
+# ============================================================
+# SUPABASE STORAGE (files server se alag rehti hain)
+# Env na ho to code apne aap local disk pe chala jayega.
+# ============================================================
+import httpx
+
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "").rstrip("/")
+SUPABASE_SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+SUPABASE_BUCKET = os.environ.get("SUPABASE_BUCKET", "tcl-files")
+STORAGE_REMOTE = bool(SUPABASE_URL and SUPABASE_SERVICE_KEY)
+
+if STORAGE_REMOTE:
+    logger.info(f"Storage: Supabase bucket '{SUPABASE_BUCKET}'")
+else:
+    logger.warning("Storage: local disk (files will be lost on redeploy)")
+
+
+async def storage_put(filename: str, data: bytes, content_type: str) -> str:
+    """File save karo. Public URL wapas do."""
+    if not STORAGE_REMOTE:
+        (UPLOAD_DIR / filename).write_bytes(data)
+        return f"/api/files/{filename}"
+
+    endpoint = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{filename}"
+    headers = {
+        "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
+        "Content-Type": content_type,
+        "x-upsert": "true",
+        "cache-control": "public, max-age=31536000",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=120) as c:
+            r = await c.post(endpoint, content=data, headers=headers)
+    except Exception as e:
+        logger.exception("Supabase upload failed")
+        raise HTTPException(status_code=502, detail=f"Storage upload failed: {e}")
+    if r.status_code not in (200, 201):
+        logger.error(f"Supabase upload {r.status_code}: {r.text[:300]}")
+        raise HTTPException(status_code=502, detail="Storage upload failed")
+    return f"{SUPABASE_URL}/storage/v1/object/public/{SUPABASE_BUCKET}/{filename}"
+
+
+async def storage_delete(filename: str) -> None:
+    """File hatao. Fail ho to sirf log — delete flow rukna nahi chahiye."""
+    if not filename:
+        return
+    if not STORAGE_REMOTE:
+        fp = UPLOAD_DIR / filename
+        try:
+            if fp.exists():
+                fp.unlink()
+        except Exception as e:
+            logger.warning(f"Local unlink failed {fp}: {e}")
+        return
+
+    endpoint = f"{SUPABASE_URL}/storage/v1/object/{SUPABASE_BUCKET}/{filename}"
+    try:
+        async with httpx.AsyncClient(timeout=30) as c:
+            await c.delete(endpoint, headers={"Authorization": f"Bearer {SUPABASE_SERVICE_KEY}"})
+    except Exception as e:
+        logger.warning(f"Supabase delete failed {filename}: {e}")
+    fp = UPLOAD_DIR / filename
+    try:
+        if fp.exists():
+            fp.unlink()
+    except Exception:
+        pass
+
 
 
 # ============================================================
@@ -1126,12 +1194,7 @@ async def admin_delete_media(media_id: str, user=Depends(require_admin_or_super)
     if upload_id:
         up = await db.uploads.find_one({"id": upload_id})
         if up:
-            fp = UPLOAD_DIR / up["filename"]
-            try:
-                if fp.exists():
-                    fp.unlink()
-            except Exception as e:
-                logging.warning(f"Failed to unlink {fp}: {e}")
+            await storage_delete(up["filename"])
             await db.uploads.delete_one({"id": upload_id})
     await db.media.delete_one({"id": media_id})
     await audit_log(user, "media.delete", "media", media_id)
@@ -1442,8 +1505,7 @@ async def upload_file(
         ext = ".jpg"
     file_id = str(uuid.uuid4())
     filename = f"{file_id}{ext}"
-    fpath = UPLOAD_DIR / filename
-    fpath.write_bytes(data)
+    url = await storage_put(filename, data, content_type)
     checksum = hashlib.sha256(data).hexdigest()
     doc = {
         "id": file_id, "filename": filename, "original_name": file.filename,
@@ -1452,7 +1514,6 @@ async def upload_file(
     }
     await db.uploads.insert_one(doc)
     await audit_log(user, "upload.create", "upload", file_id, {"name": file.filename, "size": len(data)})
-    url = f"/api/files/{filename}"
 
     # Also index into media library if requested (so it appears in admin Media screen)
     media_id = None
@@ -1480,9 +1541,7 @@ async def delete_upload(file_id: str, user=Depends(require_admin_or_super)):
     doc = await db.uploads.find_one({"id": file_id})
     if not doc:
         raise HTTPException(status_code=404, detail="Not found")
-    fp = UPLOAD_DIR / doc["filename"]
-    if fp.exists():
-        fp.unlink()
+    await storage_delete(doc["filename"])
     await db.uploads.delete_one({"id": file_id})
     # Cascade: also remove media library entries that reference this upload
     await db.media.delete_many({"upload_id": file_id})
@@ -1506,9 +1565,7 @@ async def admin_media_replace(media_id: str, payload: MediaReplacePayload, user=
     if prev_upload_id and prev_upload_id != payload.upload_id:
         prev = await db.uploads.find_one({"id": prev_upload_id})
         if prev:
-            fp = UPLOAD_DIR / prev["filename"]
-            if fp.exists():
-                fp.unlink()
+            await storage_delete(prev["filename"])
             await db.uploads.delete_one({"id": prev_upload_id})
     upd = {"url": payload.url, "updated_at": now_utc()}
     if payload.thumbnail_url is not None:
